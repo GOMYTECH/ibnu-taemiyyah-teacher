@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        td {
+            background-color: #fff;
+        }
+        .highlight {
+            background-color: #000;
+            color: #fff;
+        }
+        .inactive {
+            background-color: #fff;
+        }
+        .active {
+            background-color: #ffeb3b; /* Yellow */
+            color: #000;
+        }
+        .time-col {
+            background-color: #ffeb3b; /* Yellow */
+            font-weight: bold;
+        }
+        .current-time {
+            background-color: #ffeb3b; /* Yellow */
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Weekly Timetable</h1>
+    <div class="container">
+        <table id="timetable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                </tr>
+            </thead>
+            <tbody id="timetable-body">
+                <!-- Rows will be dynamically filled by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Time slots in 15-minute intervals
+        const timeSlots = [
+            '04:25 - 05:15', '09:15 - 09:30', '09:30 - 09:45', '09:45 - 10:00',
+            '10:00 - 10:15', '10:15 - 10:30', '10:30 - 10:45', '10:45 - 11:00',
+            '11:00 - 11:15', '11:15 - 11:30'
+        ];
+
+        const subjects = [
+            ['Math', 'Physics', 'Chemistry', 'Biology', 'English', 'History', 'Art'],
+            ['English', 'Biology', 'History', 'Art', 'Math', 'Physics', 'Chemistry'],
+            ['History', 'Art', 'Math', 'Physics', 'Chemistry', 'English', 'Biology'],
+            ['Biology', 'Math', 'Physics', 'Chemistry', 'English', 'History', 'Art'],
+            ['Chemistry', 'Biology', 'Math', 'Physics', 'Art', 'History', 'English']
+        ];
+
+        function generateTable() {
+            const tbody = document.getElementById('timetable-body');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            timeSlots.forEach((timeSlot, rowIndex) => {
+                const row = document.createElement('tr');
+                const timeCell = document.createElement('td');
+                timeCell.textContent = timeSlot;
+                timeCell.className = 'time-col';
+                row.appendChild(timeCell);
+
+                for (let day = 0; day < 7; day++) {
+                    const cell = document.createElement('td');
+                    cell.textContent = subjects[rowIndex % subjects.length][day];
+                    row.appendChild(cell);
+                }
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateTimetable() {
+            const now = new Date();
+            const currentTime = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+            const rows = document.querySelectorAll('#timetable-body tr');
+            
+            rows.forEach(row => {
+                const timeSlot = row.querySelector('td.time-col').textContent;
+                const [startTime, endTime] = timeSlot.split(' - ');
+                
+                if (currentTime >= startTime && currentTime < endTime) {
+                    row.classList.add('highlight');
+                    row.classList.remove('inactive');
+                } else {
+                    row.classList.remove('highlight');
+                    row.classList.add('inactive');
+                }
+            });
+        }
+
+        // Initial table generation and update
+        generateTable();
+        updateTimetable();
+
+        // Update every minute
+        setInterval(updateTimetable, 60000);
+    </script>
+</body>
+</html>

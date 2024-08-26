@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Form</title>
+   <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #FFD700;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.instructions {
+    margin-bottom: 20px;
+}
+
+.form-container, .display-container {
+    margin-bottom: 20px;
+}
+
+input, button {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #FFD700;
+    border-radius: 5px;
+    background-color: #000;
+    color: #FFD700;
+}
+
+button {
+    cursor: pointer;
+    background-color: #FFD700;
+    color: #000;
+}
+
+button:hover {
+    background-color: #FFC107;
+}
+
+.info-item {
+    margin-bottom: 10px;
+}
+
+.delete-button {
+    background-color: #FF5722;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #FF3D00;
+}
+
+   </style>
+</head>
+<body>
+    <div class="container">
+        <div class="instructions">
+            <h1>Instructions</h1>
+            <p>Fill out the form below with your information. You can view and delete submitted data as needed.</p>
+        </div>
+        <div class="form-container">
+            <form id="infoForm">
+                <label for="gmail">Gmail Account:</label>
+                <input type="email" id="gmail" name="gmail" required><br><br>
+
+                <label for="bank">Bank Account Number:</label>
+                <input type="text" id="bank" name="bank" required><br><br>
+
+                <label for="name">Account Holder Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required><br><br>
+
+                <label for="number">Number:</label>
+                <input type="number" id="number" name="number" required><br><br>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="display-container">
+            <h2>Submitted Information</h2>
+            <div id="infoList"></div>
+        </div>
+    </div>
+    <script>
+   document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('infoForm');
+    const infoList = document.getElementById('infoList');
+    const password = '142512';
+    
+    // Load saved data from localStorage
+    loadInfo();
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const gmail = document.getElementById('gmail').value;
+        const bank = document.getElementById('bank').value;
+        const name = document.getElementById('name').value;
+        const amount = document.getElementById('amount').value;
+        const number = document.getElementById('number').value;
+
+        const info = {
+            gmail,
+            bank,
+            name,
+            amount,
+            number
+        };
+
+        addInfoToList(info);
+        saveInfoToLocalStorage(info);
+
+        form.reset();
+    });
+
+    function addInfoToList(info) {
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'info-item';
+
+        infoDiv.innerHTML = `
+            <p><strong>Gmail:</strong> ${info.gmail}</p>
+            <p><strong>Bank Account Number:</strong> ${info.bank}</p>
+            <p><strong>Account Holder Name:</strong> ${info.name}</p>
+            <p><strong>Amount:</strong> ${info.amount}</p>
+            <p><strong>Number:</strong> ${info.number}</p>
+            <button class="delete-button">Delete</button>
+        `;
+
+        const deleteButton = infoDiv.querySelector('.delete-button');
+        deleteButton.addEventListener('click', () => {
+            const inputPassword = prompt('Enter password to delete this entry:');
+            if (inputPassword === password) {
+                infoDiv.remove();
+                removeInfoFromLocalStorage(info);
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+
+        infoList.appendChild(infoDiv);
+    }
+
+    function saveInfoToLocalStorage(info) {
+        const infoList = JSON.parse(localStorage.getItem('infoList')) || [];
+        infoList.push(info);
+        localStorage.setItem('infoList', JSON.stringify(infoList));
+    }
+
+    function loadInfo() {
+        const infoList = JSON.parse(localStorage.getItem('infoList')) || [];
+        infoList.forEach(info => addInfoToList(info));
+    }
+
+    function removeInfoFromLocalStorage(infoToRemove) {
+        const infoList = JSON.parse(localStorage.getItem('infoList')) || [];
+        const updatedList = infoList.filter(info => JSON.stringify(info) !== JSON.stringify(infoToRemove));
+        localStorage.setItem('infoList', JSON.stringify(updatedList));
+    }
+});
+
+    </script>
+</body>
+</html>

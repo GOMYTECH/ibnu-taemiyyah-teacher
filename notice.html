@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>send notice</title>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: yellow;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: black;
+    color: yellow;
+}
+
+.instructions {
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input, textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid yellow;
+    background-color: black;
+    color: yellow;
+}
+
+button {
+    background-color: yellow;
+    color: black;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #f1c40f;
+}
+
+.data-entry {
+    border: 1px solid yellow;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: black;
+    color: yellow;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #e74c3c;
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="instructions">
+            <h2>Instructions</h2>
+            <p>Please fill out the form below. The data entered will appear below with an option to delete each entry. Deletion requires a password.</p>
+            <p>You can also report a student behaviour in class</p>
+        </div>
+        <form id="dataForm">
+            <label for="teacherName">Teacher's Name:</label>
+            <input type="text" id="teacherName" name="teacherName" required>
+            <br>
+            <label for="studentName">Student's Name:</label>
+            <input type="text" id="studentName" name="studentName" required>
+            <br>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="dataContainer"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+    const dataContainer = document.getElementById('dataContainer');
+    const form = document.getElementById('dataForm');
+
+    // Load data from localStorage
+    const loadData = () => {
+        const data = JSON.parse(localStorage.getItem('dataEntries')) || [];
+        dataContainer.innerHTML = '';
+        data.forEach((entry, index) => {
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'data-entry';
+            entryDiv.innerHTML = `
+                <p><strong>Teacher:</strong> ${entry.teacherName}</p>
+                <p><strong>Student:</strong> ${entry.studentName}</p>
+                <p><strong>Message:</strong> ${entry.message}</p>
+                <button class="delete-button" data-index="${index}">Delete</button>
+            `;
+            dataContainer.appendChild(entryDiv);
+        });
+    };
+
+    loadData();
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const teacherName = document.getElementById('teacherName').value;
+        const studentName = document.getElementById('studentName').value;
+        const message = document.getElementById('message').value;
+
+        const data = JSON.parse(localStorage.getItem('dataEntries')) || [];
+        data.push({ teacherName, studentName, message });
+        localStorage.setItem('dataEntries', JSON.stringify(data));
+
+        loadData();
+
+        form.reset();
+    });
+
+    dataContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-button')) {
+            const index = event.target.getAttribute('data-index');
+            const password = prompt('Enter password to delete:');
+            if (password === '142512') {
+                const data = JSON.parse(localStorage.getItem('dataEntries'));
+                data.splice(index, 1);
+                localStorage.setItem('dataEntries', JSON.stringify(data));
+                loadData();
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

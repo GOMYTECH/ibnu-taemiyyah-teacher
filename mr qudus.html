@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home page</title>
+    <style>
+        /* Your existing styles remain unchanged */
+        body {
+            background-color: #000;
+            color: #ffd700; /* Yellow text */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #111;
+            padding: 10px;
+            position: relative;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            color: #ffd700; /* Yellow text */
+        }
+
+        .profile-info h1 {
+            margin-left: 10px;
+        }
+
+        .notifications {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #444;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-content p {
+            margin: 0;
+        }
+
+        .notification-content .notice {
+            font-weight: bold;
+        }
+
+        .notification-content button {
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .notification-content button:hover {
+            background-color: #e0c800;
+        }
+
+        .balance-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .balance-box {
+            background-color: #333; /* Darker box background */
+            padding: 15px;
+            border-radius: 8px;
+            width: 45%;
+            border: 2px solid #ffd700; /* Yellow border */
+        }
+
+        .balance-box h2 {
+            margin-top: 0;
+            color: #ffd700; /* Yellow text */
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap; /* Allows wrapping to fit on smaller screens */
+        }
+
+        .quick-actions button {
+            background-color: #444; /* Dark button background */
+            border: none;
+            color: #ffd700; /* Yellow text */
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px; /* Adjust spacing between buttons */
+        }
+
+        .quick-actions button:hover {
+            background-color: #555; /* Slightly lighter button background */
+        }
+
+        .transaction-history {
+            padding: 15px;
+            background-color: #333; /* Darker background for history */
+            border-radius: 8px;
+            border: 2px solid #ffd700; /* Yellow border */
+            position: relative;
+        }
+
+        .transaction-history h2 {
+            margin-top: 0;
+            color: #ffd700; /* Yellow text */
+        }
+
+        .transaction-history ul {
+            list-style-type: none;
+            padding: 0;
+            max-height: 200px; /* Limit height */
+            overflow-y: auto; /* Scroll if needed */
+            margin: 0;
+        }
+
+        .transaction-history li {
+            border-bottom: 1px solid #444; /* Dark border between transactions */
+            padding: 5px 0;
+            color: #ffd700; /* Yellow text */
+        }
+
+        .transaction-history button {
+            background-color: #444; /* Dark button background */
+            border: none;
+            color: #ffd700; /* Yellow text */
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .transaction-history button:hover {
+            background-color: #555; /* Slightly lighter button background */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #222;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            color: #ffd700; /* Yellow text */
+        }
+
+        .close {
+            color: #ffd700; /* Yellow text for close button */
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .floating-action-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366; /* WhatsApp color */
+            color: #fff; /* White text */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .donate-button,
+        .add-money-button,
+        .deduct-money-button,
+        .pay-school-fee-button {
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .donate-button:hover,
+        .add-money-button:hover,
+        .deduct-money-button:hover,
+        .pay-school-fee-button:hover {
+            background-color: #e0c800;
+        }
+
+        .pay-school-fee-button {
+            background-color: #e74c3c; /* Red background for pay school fee button */
+            color: #fff; /* White text */
+        }
+
+        .pay-school-fee-button:hover {
+            background-color: #c0392b;
+        }
+
+        .add-money-button,
+        .deduct-money-button {
+            background-color: #28a745; /* Green background for add and deduct money buttons */
+            color: #fff; /* White text */
+        }
+
+        .add-money-button:hover,
+        .deduct-money-button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        .actions-buttons button {
+            background-color: #444;
+            color: #ffd700;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .actions-buttons button:hover {
+            background-color: #555;
+        }
+
+        .filter-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-container select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ffd700;
+            background-color: #333;
+            color: #ffd700;
+        }
+
+        .filter-container button {
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-container button:hover {
+            background-color: #e0c800;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-info">
+            <div class="profile-info">
+                <img src="ibu.png" alt="Profile Picture" class="profile-pic">
+                <h1>Mr Adeosun Qudus</h1>
+            </div>
+            <div class="notifications" id="notification">
+                <div class="notification-content">
+                    <p>Welcome! <span class="notice">Important notice here...</span></p>
+                    <button onclick="closeNotification()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="balance-container">
+        <div class="balance-box">
+            <h2>MEANT: <span id="balance-box">FOR STAFF</span></h2>
+            <button class="pay-school-fee-button" onclick="redirectmettingpagePage()">metting room</button>
+            <button class="pay-school-fee-button" onclick="redirecttoeventschoolPage()">School Event</button>
+            <button class="pay-school-fee-button" onclick="redirecttochatpage()">Chat Room</button>
+            <button class="pay-school-fee-button" onclick="redirecttotimePage()">check the class you have next</button>
+          
+        </div>
+
+        <div class="balance-box">
+            <h2>MEANT: <span id="school-fees-balance">FOR STUDENT AND PARENT</span></h2>
+            <button class="pay-school-fee-button" onclick="redirectonoticePage()">send notice to parent page</button>
+            <button class="pay-school-fee-button" onclick="redirecttoresultpage()">upload student result </button>
+            <button class="pay-school-fee-button" onclick="redirecttoperformancePage()">student performance</button>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+
+      
+
+      
+       
+        <button class="pay-school-fee-button" onclick="redirecttoprofilepage()">Profile</button>
+        <button class="pay-school-fee-button" onclick="redirecttologoutpage()">Logout</button>
+    </div>
+
+    <div class="transaction-history">
+        <h2>Action History </h2>
+        <ul id="transaction-list">
+            <!-- Transaction items will be inserted here -->
+        </ul>
+        <button onclick="viewMoreTransactions()">View More</button>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Modal Title</h2>
+            <p>Some content for the modal..</p>
+        </div>
+    </div>
+
+    <div class="floating-action-btn" onclick="openWhatsApp()">
+        &#x2709;
+    </div>
+
+    <script>
+
+   
+        function redirecttoperformancePage() {
+            window.location.href = 'performance.html'; // Adjust this to the actual page URL
+        }
+
+        function redirecttostudentperformanceloadpage() {
+            window.location.href = 'performmance.html'; // Adjust this to the actual page URL
+        }
+
+        function redirecttochatpage() {
+            window.location.href = 'chatroom.html'; // Adjust this to the actual page URL
+        }
+        function redirectmettingpagePage() {
+            window.location.href = 'metting room.html'; // Adjust this to the actual page URL
+        }
+        function redirecttoresultpage() {
+            window.location.href = 'upload.html'; // Adjust this to the actual page URL
+        }
+        function redirecttologoutpage() {
+            window.location.href = 'login.html'; // Adjust this to the actual page URL
+        }
+        function redirectTowithdrawPage() {
+            window.location.href = 'withdraw.html'; // Adjust this to the actual page URL
+        }
+        function redirectTodepositPage() {
+            window.location.href = 'deposit.html'; // Adjust this to the actual page URL
+        }
+        function redirecttoprofilepage() {
+            window.location.href = 'qudus pro.html'; // Adjust this to the actual page URL
+        }
+        function redirecttoeventschoolPage() {
+            window.location.href = 'event.html'; // Adjust this to the actual page URL
+
+        }
+        function redirectonoticePage() {
+            window.location.href = 'sendnotice.html'; // Adjust this to the actual page URL
+            
+        }
+        function redirecttotimePage() {
+            window.location.href = 'time.html'; // Adjust this to the actual page URL
+            
+        }
+       
+       
+        function openWhatsApp() {
+            window.open('https://wa.me/09166724452', '_blank');
+        }
+
+        function viewMoreTransactions() {
+            // Add functionality to view more transactions
+            alert('View more transactions functionality here.');
+        }
+
+        function closeNotification() {
+            document.getElementById('notification').style.display = 'none';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

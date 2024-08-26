@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .profile-container {
+            background-color: #222;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #444;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .profile-info {
+            margin-bottom: 20px;
+        }
+        .profile-info h2 {
+            margin: 10px 0;
+            font-size: 20px;
+            color: #ffcc00;
+        }
+        .profile-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #fff;
+        }
+        .form-container {
+            display: none; /* Hide the form container since it's uneditable */
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-info">
+            <img src="ibu.png" alt="Profile Picture" class="profile-pic">
+            
+        </div>
+        <div class="profile-info">
+            <h2 id="profileName">Mrs Omoboriowo Ruqayat B</h2>
+            <p id="profileSubject">Subject:Rvn /Tnfo Tech</p>
+            <p id="profileEmail">Email:UNKOWN</p>
+            <p id="profilePhone">UNKWON</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePic').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

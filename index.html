@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: yellow;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: black;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin: 10px 0 5px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 2px solid yellow;
+            border-radius: 4px;
+            background-color: black;
+            color: yellow;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: yellow;
+            color: black;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkgoldenrod;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Map of usernames and passwords to their respective pages
+            const validCredentials = {
+                'mrkenny': { password: 'kenny@ibnu', page: 'Mr kenny.html' },
+                'mrluqman': { password: 'luqman@ibnu', page: 'mr luqman.html' },
+                'mrsanusi': { password: 'sanusi@ibnu', page: 'mr sanusi.html' },
+              'mrabdulrasaq': { password: 'abdulrasaq@ibnu', page: 'mr abdul rasaq.html' },
+                'mrabdullah': { password: 'abdullah@ibnu', page: 'mr abdullah.html' },
+                'mremiola': { password: 'emiola@ibnu', page: 'mr emiola.html' },
+                'mrmuhydeen': { password: 'muhydeen@ibnu', page: 'mr muhydeen.html' },
+                'mropeyemi': { password: 'opeyemi@ibnu', page: 'mr opeyemi.html' },
+                'mrowolabi': { password: 'owolabi@ibnu', page: 'mr owolabi.html' },
+                'mrqudus': { password: 'qudus@ibnu', page: 'mr qudus.html' },
+                'mrsadepeju': { password: 'adepeju@ibnu', page: 'mrs adepeju.html' },
+                'mremitomo': { password: 'emitomo@ibnu', page: 'mrs emitomo fatimo.html' },
+                'mrsganiyu': { password: 'ganiyu@ibnu', page: 'mrs ganiyu.html' },
+                'mrsmariyam': { password: 'mariyam@ibnu', page: 'mrs mariyam.html' },
+                'mrsmomboriowo': { password: 'omoboriowo@ibnu', page: 'mrs omoboriowo.html' },
+                'mrsolukemi': { password: 'olukemi@ibnu', page: 'mrs olukemi.html' },
+                'mrszainab': { password: 'zainab@ibnu', page: 'mrs zainab.html' }
+            };
+
+            // Check if credentials are valid and redirect
+            if (validCredentials[username] && validCredentials[username].password === password) {
+                window.location.href = validCredentials[username].page;
+            } else {
+                alert('Invalid username or password');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Info Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #FFFF00;
+            margin: 20px;
+        }
+
+        h1, h2 {
+            color: #FFFF00;
+        }
+
+        form {
+            background-color: #333333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #FFFF00;
+            background-color: #000000;
+            color: #FFFF00;
+        }
+
+        button {
+            background-color: #FFFF00;
+            color: #000000;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #FFD700;
+        }
+
+        #dataList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #dataList li {
+            background-color: #333333;
+            border: 1px solid #FFFF00;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #dataList li button {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            padding: 5px 10px;
+        }
+
+        #dataList li button:hover {
+            background-color: #CC0000;
+        }
+
+        #passwordPrompt {
+            background-color: #333333;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        #passwordError {
+            color: #FF0000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Information Form</h1>
+    <form id="studentForm">
+        <label for="name">Student Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required>
+        <label for="mark">Mark:</label>
+        <input type="number" id="mark" name="mark" required>
+        <label for="class">Class:</label>
+        <input type="text" id="class" name="class" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="dataContainer">
+        <h2>Submitted Data</h2>
+        <ul id="dataList"></ul>
+    </div>
+    <div id="passwordPrompt">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button id="passwordButton">Submit</button>
+        <p id="passwordError">Incorrect Password!</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('studentForm');
+            const dataList = document.getElementById('dataList');
+            const passwordPrompt = document.getElementById('passwordPrompt');
+            const passwordButton = document.getElementById('passwordButton');
+            const passwordInput = document.getElementById('password');
+            const passwordError = document.getElementById('passwordError');
+            const correctPassword = '142512';
+
+            // Function to handle form submission
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const subject = document.getElementById('subject').value;
+                const mark = document.getElementById('mark').value;
+                const className = document.getElementById('class').value;
+
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <strong>Name:</strong> ${name} <br>
+                    <strong>Subject:</strong> ${subject} <br>
+                    <strong>Mark:</strong> ${mark} <br>
+                    <strong>Class:</strong> ${className} <br>
+                    <button onclick="deleteItem(this)">Delete</button>
+                `;
+                dataList.appendChild(listItem);
+
+                // Save the data to localStorage
+                saveData();
+
+                // Clear the form fields
+                form.reset();
+            });
+
+            // Function to handle password check
+            passwordButton.addEventListener('click', () => {
+                if (passwordInput.value === correctPassword) {
+                    passwordPrompt.style.display = 'none';
+                    dataContainer.style.display = 'block';
+                    passwordError.style.display = 'none';
+                } else {
+                    passwordError.style.display = 'block';
+                }
+            });
+
+            // Function to delete an item
+            window.deleteItem = function(button) {
+                const listItem = button.parentElement;
+                listItem.remove();
+                saveData();
+            }
+
+            // Function to save data to localStorage
+            function saveData() {
+                const dataItems = [];
+                dataList.querySelectorAll('li').forEach(li => {
+                    const name = li.querySelector('strong:nth-of-type(1)').nextSibling.textContent.trim();
+                    const subject = li.querySelector('strong:nth-of-type(2)').nextSibling.textContent.trim();
+                    const mark = li.querySelector('strong:nth-of-type(3)').nextSibling.textContent.trim();
+                    const className = li.querySelector('strong:nth-of-type(4)').nextSibling.textContent.trim();
+                    dataItems.push({ name, subject, mark, className });
+                });
+                localStorage.setItem('studentData', JSON.stringify(dataItems));
+            }
+
+            // Function to load data from localStorage
+            function loadData() {
+                const savedData = localStorage.getItem('studentData');
+                if (savedData) {
+                    const dataItems = JSON.parse(savedData);
+                    dataItems.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <strong>Name:</strong> ${item.name} <br>
+                            <strong>Subject:</strong> ${item.subject} <br>
+                            <strong>Mark:</strong> ${item.mark} <br>
+                            <strong>Class:</strong> ${item.className} <br>
+                            <button onclick="deleteItem(this)">Delete</button>
+                        `;
+                        dataList.appendChild(listItem);
+                    });
+                }
+            }
+
+            // Load data on page load
+            loadData();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>performance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: yellow;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .instructions {
+            padding: 20px;
+            background-color: #333;
+            border-bottom: 2px solid yellow;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        p {
+            margin: 10px 0 0;
+        }
+
+        .form-container {
+            padding: 20px;
+            background-color: #444;
+            border-bottom: 2px solid yellow;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="file"] {
+            border: 1px solid yellow;
+            background-color: #222;
+            color: yellow;
+            padding: 5px;
+        }
+
+        button {
+            background-color: yellow;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ffcc00;
+        }
+
+        .image-gallery {
+            padding: 20px;
+            background-color: #333;
+        }
+
+        .image-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .image-item img {
+            max-width: 150px;
+            margin-right: 10px;
+            border: 1px solid yellow;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="instructions">
+            <h1>Upload and Manage Images</h1>
+            <p>Select an image file to upload. Each uploaded image will be displayed below with an option to delete it.</p>
+            <p>only for class teachers</p>
+        </div>
+        <div class="form-container">
+            <form id="uploadForm">
+                <input type="file" id="imageInput" accept="image/*">
+                <button type="submit">Upload Image</button>
+            </form>
+        </div>
+        <div class="image-gallery" id="imageGallery">
+            <!-- Uploaded images will appear here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('uploadForm');
+            const imageInput = document.getElementById('imageInput');
+            const imageGallery = document.getElementById('imageGallery');
+
+            // Load images from localStorage
+            const loadImages = () => {
+                const images = JSON.parse(localStorage.getItem('images')) || [];
+                imageGallery.innerHTML = '';
+                images.forEach((imageSrc, index) => {
+                    addImageToGallery(imageSrc, index);
+                });
+            };
+
+            // Add an image to the gallery
+            const addImageToGallery = (src, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                imageItem.innerHTML = `
+                    <img src="${src}" alt="Uploaded Image">
+                    <button class="delete-btn" data-index="${index}">Delete</button>
+                `;
+                imageGallery.appendChild(imageItem);
+            };
+
+            // Handle form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const file = imageInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const imageSrc = reader.result;
+                        const images = JSON.parse(localStorage.getItem('images')) || [];
+                        images.push(imageSrc);
+                        localStorage.setItem('images', JSON.stringify(images));
+                        addImageToGallery(imageSrc, images.length - 1);
+                        imageInput.value = ''; // Clear input
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle delete button click
+            imageGallery.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    let images = JSON.parse(localStorage.getItem('images')) || [];
+                    images.splice(index, 1);
+                    localStorage.setItem('images', JSON.stringify(images));
+                    loadImages(); // Refresh gallery
+                }
+            });
+
+            loadImages(); // Load images on page load
+        });
+    </script>
+</body>
+</html>

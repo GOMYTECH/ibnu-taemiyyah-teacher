@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Details Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #222;
+        }
+        .header-container {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f7c600;
+            padding-bottom: 10px;
+        }
+        .header-container h1 {
+            margin: 0;
+            color: #f7c600;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="number"],
+        .form-container input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #f7c600;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+        }
+        .form-container button {
+            background-color: #f7c600;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-container button:hover {
+            background-color: #e6b800;
+        }
+        .info-container {
+            margin: 10px 0;
+        }
+        .info-entry {
+            border: 1px solid #f7c600;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .info-entry button {
+            background-color: #f7c600;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        .info-entry button:hover {
+            background-color: #e6b800;
+        }
+        .info-entry .details {
+            display: none;
+        }
+        .info-entry .details.active {
+            display: block;
+        }
+        .info-entry .name {
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .info-entry .receipt {
+            display: none;
+        }
+        .info-entry .receipt.active {
+            display: block;
+            margin-top: 10px;
+        }
+        .info-entry .receipt img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container header-container">
+        <h1>Bank Details</h1>
+    </div>
+
+    <div class="container form-container">
+        <form id="bank-form">
+            <label for="name">Name on Account</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="account-number">Account Number</label>
+            <input type="number" id="account-number" name="account-number" required>
+
+            <label for="bank">Bank</label>
+            <input type="text" id="bank" name="bank" required>
+
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" required>
+
+            <label for="receipt">Upload Receipt</label>
+            <input type="file" id="receipt" name="receipt" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="container info-container" id="info-container">
+        <!-- Info entries will be appended here -->
+    </div>
+
+    <script>
+        const form = document.getElementById('bank-form');
+        const infoContainer = document.getElementById('info-container');
+
+        // Load saved info from localStorage
+        function loadInfo() {
+            const savedInfo = JSON.parse(localStorage.getItem('bankDetails')) || [];
+            savedInfo.forEach(info => displayEntry(info));
+        }
+
+        // Display a new info entry
+        function displayEntry(info) {
+            const entry = document.createElement('div');
+            entry.classList.add('info-entry');
+            entry.id = `entry-${info.id}`;
+
+            entry.innerHTML = `
+                <div class="name" onclick="toggleDetails('${entry.id}')">${info.name} (${info.id})</div>
+                <div class="details">
+                    <p><strong>Account Number:</strong> ${info.accountNumber}</p>
+                    <p><strong>Bank:</strong> ${info.bank}</p>
+                    <p><strong>Amount:</strong> ${info.amount}</p>
+                    <button onclick="showReceipt('${entry.id}')">Show Receipt</button>
+                    <button onclick="deleteEntry('${entry.id}')">Delete</button>
+                </div>
+                <div class="receipt">
+                    <img src="${info.receipt}" alt="Receipt">
+                </div>
+            `;
+
+            infoContainer.appendChild(entry);
+        }
+
+        // Toggle details display
+        function toggleDetails(id) {
+            const entry = document.getElementById(id);
+            entry.querySelector('.details').classList.toggle('active');
+        }
+
+        // Show/Hide receipt with password protection
+        function showReceipt(id) {
+            const entry = document.getElementById(id);
+            const password = prompt('Enter password:');
+            if (password === '142512') {
+                entry.querySelector('.receipt').classList.toggle('active');
+            } else {
+                alert('Incorrect password');
+            }
+        }
+
+        // Delete an entry with password protection
+        function deleteEntry(id) {
+            const password = prompt('Enter password:');
+            if (password === '142512') {
+                const entry = document.getElementById(id);
+                entry.remove();
+
+                // Remove from localStorage
+                let savedInfo = JSON.parse(localStorage.getItem('bankDetails')) || [];
+                savedInfo = savedInfo.filter(info => `entry-${info.id}` !== id);
+                localStorage.setItem('bankDetails', JSON.stringify(savedInfo));
+            } else {
+                alert('Incorrect password');
+            }
+        }
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const accountNumber = document.getElementById('account-number').value;
+            const bank = document.getElementById('bank').value;
+            const amount = document.getElementById('amount').value;
+            const receiptFile = document.getElementById('receipt').files[0];
+            const receiptURL = URL.createObjectURL(receiptFile); // Create a URL for the receipt
+
+            const id = new Date().getTime(); // Unique ID for each entry
+
+            const info = {
+                id,
+                name,
+                accountNumber,
+                bank,
+                amount,
+                receipt: receiptURL
+            };
+
+            // Save to localStorage
+            const savedInfo = JSON.parse(localStorage.getItem('bankDetails')) || [];
+            savedInfo.push(info);
+            localStorage.setItem('bankDetails', JSON.stringify(savedInfo));
+
+            displayEntry(info);
+            form.reset();
+        });
+
+        // Load info on page load
+        loadInfo();
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* Default style */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000; /* Default light background */
+            color: #333; /* Default dark text */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #0a0a0a;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #dbff11;
+            color: #000000;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Black and Yellow theme */
+        .black-yellow {
+            background-color: black;
+            color: yellow;
+        }
+
+        .black-yellow input, .black-yellow button {
+            border: 1px solid yellow;
+        }
+
+        .black-yellow button {
+            background-color: yellow;
+            color: black;
+        }
+
+        .black-yellow button:hover {
+            background-color: #f1c40f;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="background-color: #ffffff;">Login</h1>
+        <form id="loginForm">
+            <input type="password" id="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('message');
+            const body = document.body;
+
+            if (password === 'IBNUTAEMIYAHS.123456') {
+                body.classList.add('black-yellow');
+                message.textContent = 'Redirecting...';
+
+                // Redirect to time.html after a short delay
+                setTimeout(() => {
+                    window.location.href = 'room.html';
+                }, 1000); // 1 second delay to allow the message to be visible
+            } else {
+                body.classList.remove('black-yellow');
+                message.textContent = 'Incorrect password!';
+            }
+        });
+    </script>
+</body>
+</html>
