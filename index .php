@@ -118,3 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+
+            <p style="color: red;"><?php echo $error; ?></p>
+        <?php endif; ?>
+    </div>
+</body>
+</html>
